@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Embeddings + Parameters Interactive Demo</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .panel {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 25px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            margin: 20px 0;
+            color: #333;
+        }
+        
+        .parameter-controls {
+            margin: 20px 0;
+        }
+        
+        .control-group {
+            margin: 15px 0;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            margin: 5px 0;
+        }
+        
+        .value-display {
+            font-family: monospace;
+            background: rgba(0,0,0,0.2);
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin: 5px 0;
+        }
+        
+        .word-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .word-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+        
+        .word-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        
+        .word-btn.active {
+            background: linear-gradient(45deg, #10ac84, #00d2d3);
+        }
+        
+        .analogy-section {
+            grid-column: 1 / -1;
+            text-align: center;
+        }
+        
+        .analogy-display {
+            font-size: 1.5em;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: monospace;
+        }
+        
+        .step-by-step {
+            text-align: left;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .parameter-table {
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+        
+        .highlight {
+            background: yellow;
+            padding: 2px 4px;
+            border-radius: 3px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧠 Embeddings + Parameters: The Complete Picture</h1>
+        
+        <div class="demo-grid">
+            <div class="panel">
+                <h2>📍 Embedding Coordinates</h2>
+                <p>Click words to see their positions:</p>
+                <div class="word-buttons">
+                    <button class="word-btn active" data-word="king">King</button>
+                    <button class="word-btn" data-word="queen">Queen</button>
+                    <button class="word-btn" data-word="prince">Prince</button>
+                    <button class="word-btn" data-word="princess">Princess</button>
+                    <button class="word-btn" data-word="peasant">Peasant</button>
+                </div>
+                <div class="chart-container">
+                    <canvas id="embeddingChart" width="400" height="400"></canvas>
+                </div>
+                <div id="coordinateDisplay" class="value-display">
+                    Selected: King [0.9, 0.8]
+                </div>
+            </div>
+            
+            <div class="panel">
+                <h2>⚙️ Parameters That Created This</h2>
+                <p>Adjust parameters to see how they affect word placement:</p>
+                
+                <div class="parameter-controls">
+                    <div class="control-group">
+                        <label>Power Weight (W₁):</label>
+                        <input type="range" id="powerWeight" min="0" max="2" step="0.1" value="1">
+                        <div class="value-display">W₁ = <span id="powerWeightVal">1.0</span></div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label>Gender Weight (W₂):</label>
+                        <input type="range" id="genderWeight" min="0" max="2" step="0.1" value="1">
+                        <div class="value-display">W₂ = <span id="genderWeightVal">1.0</span></div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label>Royal Bias (W₃):</label>
+                        <input type="range" id="royalBias" min="-1" max="1" step="0.1" value="0">
+                        <div class="value-display">W₃ = <span id="royalBiasVal">0.0</span></div>
+                    </div>
+                </div>
+                
+                <div class="parameter-table">
+                    <strong>How Parameters Create Coordinates:</strong><br>
+                    Power = base_power × W₁ + W₃<br>
+                    Gender = base_gender × W₂<br><br>
+                    <div id="parameterCalc"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="panel analogy-section">
+            <h2>🔄 Parameters in Action: Analogies</h2>
+            <div class="analogy-display" id="analogyDisplay">
+                King : Queen :: Prince : ?
+            </div>
+            
+            <div class="parameter-controls">
+                <div class="control-group">
+                    <label>Gender Flip Weight:</label>
+                    <input type="range" id="genderFlipWeight" min="-2" max="0" step="0.1" value="-1">
+                    <div class="value-display">Gender_flip = <span id="genderFlipVal">-1.0</span></div>
+                </div>
+                
+                <div class="control-group">
+                    <label>Power Maintain Weight:</label>
+                    <input type="range" id="powerMaintainWeight" min="0" max="2" step="0.1" value="1">
+                    <div class="value-display">Power_maintain = <span id="powerMaintainVal">1.0</span></div>
+                </div>
+            </div>
+            
+            <div class="step-by-step">
+                <h3>Step-by-Step Calculation:</h3>
+                <div id="calculationSteps"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Word data with base properties
+        const words = {
+            king: { name: 'King', basePower: 0.9, baseGender: 0.8, color: '#e74c3c' },
+            queen: { name: 'Queen', basePower: 0.9, baseGender: -0.7, color: '#9b59b6' },
+            prince: { name: 'Prince', basePower: 0.6, baseGender: 0.7, color: '#3498db' },
+            princess: { name: 'Princess', basePower: 0.6, baseGender: -0.6, color: '#e91e63' },
+            peasant: { name: 'Peasant', basePower: 0.1, baseGender: 0.0, color: '#95a5a6' }
+        };
+        
+        let selectedWord = 'king';
+        let canvas, ctx;
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            canvas = document.getElementById('embeddingChart');
+            ctx = canvas.getContext('2d');
+            
+            setupEventListeners();
+            updateDisplay();
+        });
+        
+        function setupEventListeners() {
+            // Word selection buttons
+            document.querySelectorAll('.word-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.word-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    selectedWord = this.dataset.word;
+                    updateDisplay();
+                });
+            });
+            
+            // Parameter sliders
+            ['powerWeight', 'genderWeight', 'royalBias', 'genderFlipWeight', 'powerMaintainWeight'].forEach(id => {
+                document.getElementById(id).addEventListener('input', updateDisplay);
+            });
+        }
+        
+        function calculateCoordinates(word, params) {
+            const power = word.basePower * params.powerWeight + params.royalBias;
+            const gender = word.baseGender * params.genderWeight;
+            return { x: power, y: gender };
+        }
+        
+        function getParameters() {
+            return {
+                powerWeight: parseFloat(document.getElementById('powerWeight').value),
+                genderWeight: parseFloat(document.getElementById('genderWeight').value),
+                royalBias: parseFloat(document.getElementById('royalBias').value),
+                genderFlipWeight: parseFloat(document.getElementById('genderFlipWeight').value),
+                powerMaintainWeight: parseFloat(document.getElementById('powerMaintainWeight').value)
+            };
+        }
+        
+        function updateDisplay() {
+            const params = getParameters();
+            
+            // Update parameter value displays
+            document.getElementById('powerWeightVal').textContent = params.powerWeight.toFixed(1);
+            document.getElementById('genderWeightVal').textContent = params.genderWeight.toFixed(1);
+            document.getElementById('royalBiasVal').textContent = params.royalBias.toFixed(1);
+            document.getElementById('genderFlipVal').textContent = params.genderFlipWeight.toFixed(1);
+            document.getElementById('powerMaintainVal').textContent = params.powerMaintainWeight.toFixed(1);
+            
+            // Draw embedding chart
+            drawEmbeddingChart(params);
+            
+            // Update coordinate display
+            const selectedWordData = words[selectedWord];
+            const coords = calculateCoordinates(selectedWordData, params);
+            document.getElementById('coordinateDisplay').textContent = 
+                `Selected: ${selectedWordData.name} [${coords.x.toFixed(2)}, ${coords.y.toFixed(2)}]`;
+            
+            // Update parameter calculation
+            updateParameterCalculation(selectedWordData, params);
+            
+            // Update analogy calculation
+            updateAnalogyCalculation(params);
+        }
+        
+        function drawEmbeddingChart(params) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw axes
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+            
+            // X-axis (Power)
+            ctx.beginPath();
+            ctx.moveTo(50, 350);
+            ctx.lineTo(380, 350);
+            ctx.stroke();
+            
+            // Y-axis (Gender)
+            ctx.beginPath();
+            ctx.moveTo(50, 30);
+            ctx.lineTo(50, 370);
+            ctx.stroke();
+            
+            // Labels
+            ctx.fillStyle = '#333';
+            ctx.font = '14px Arial';
+            ctx.fillText('Power →', 300, 340);
+            ctx.save();
+            ctx.translate(25, 200);
+            ctx.rotate(-Math.PI/2);
+            ctx.fillText('Gender →', 0, 0);
+            ctx.restore();
+            
+            // Grid lines and labels
+            ctx.strokeStyle = '#ddd';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 10; i++) {
+                const x = 50 + i * 33;
+                const y = 350 - i * 32;
+                
+                // Vertical grid lines
+                ctx.beginPath();
+                ctx.moveTo(x, 30);
+                ctx.lineTo(x, 370);
+                ctx.stroke();
+                
+                // Horizontal grid lines
+                ctx.beginPath();
+                ctx.moveTo(50, y);
+                ctx.lineTo(380, y);
+                ctx.stroke();
+                
+                // Labels
+                ctx.fillStyle = '#666';
+                ctx.font = '10px Arial';
+                if (i % 2 === 0) {
+                    ctx.fillText((i/10).toFixed(1), x-8, 385);
+                    ctx.fillText(((5-i)/5).toFixed(1), 25, y+3);
+                }
+            }
+            
+            // Draw words
+            Object.entries(words).forEach(([key, word]) => {
+                const coords = calculateCoordinates(word, params);
+                const x = 50 + coords.x * 330;
+                const y = 350 - (coords.y + 1) * 160; // Scale from [-1,1] to canvas
+                
+                // Highlight selected word
+                if (key === selectedWord) {
+                    ctx.fillStyle = 'rgba(255, 255, 0, 0.3)';
+                    ctx.beginPath();
+                    ctx.arc(x, y, 25, 0, 2 * Math.PI);
+                    ctx.fill();
+                }
+                
+                // Draw point
+                ctx.fillStyle = word.color;
+                ctx.beginPath();
+                ctx.arc(x, y, 8, 0, 2 * Math.PI);
+                ctx.fill();
+                
+                // Draw label
+                ctx.fillStyle = '#333';
+                ctx.font = 'bold 12px Arial';
+                ctx.fillText(word.name, x + 12, y + 4);
+            });
+        }
+        
+        function updateParameterCalculation(word, params) {
+            const coords = calculateCoordinates(word, params);
+            const calc = `
+                <strong>${word.name} coordinates:</strong><br>
+                Power = ${word.basePower} × ${params.powerWeight.toFixed(1)} + ${params.royalBias.toFixed(1)} = <span class="highlight">${coords.x.toFixed(2)}</span><br>
+                Gender = ${word.baseGender} × ${params.genderWeight.toFixed(1)} = <span class="highlight">${coords.y.toFixed(2)}</span>
+            `;
+            document.getElementById('parameterCalc').innerHTML = calc;
+        }
+        
+        function updateAnalogyCalculation(params) {
+            const king = calculateCoordinates(words.king, params);
+            const queen = calculateCoordinates(words.queen, params);
+            const prince = calculateCoordinates(words.prince, params);
+            
+            // Calculate transformation
+            const transform = {
+                x: (queen.x - king.x) * params.powerMaintainWeight,
+                y: (queen.y - king.y) * Math.abs(params.genderFlipWeight)
+            };
+            
+            // Apply to prince
+            const result = {
+                x: prince.x + transform.x,
+                y: prince.y + transform.y
+            };
+            
+            // Find closest word
+            let closestWord = 'princess';
+            let minDistance = Infinity;
+            Object.entries(words).forEach(([key, word]) => {
+                const coords = calculateCoordinates(word, params);
+                const distance = Math.sqrt(Math.pow(coords.x - result.x, 2) + Math.pow(coords.y - result.y, 2));
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closestWord = key;
+                }
+            });
+            
+            // Update display
+            document.getElementById('analogyDisplay').textContent = 
+                `King : Queen :: Prince : ${words[closestWord].name}`;
+            
+            const steps = `
+                <strong>1. Find the relationship:</strong><br>
+                King [${king.x.toFixed(2)}, ${king.y.toFixed(2)}] → Queen [${queen.x.toFixed(2)}, ${queen.y.toFixed(2)}]<br>
+                Difference = [${(queen.x - king.x).toFixed(2)}, ${(queen.y - king.y).toFixed(2)}]<br><br>
+                
+                <strong>2. Apply transformation parameters:</strong><br>
+                Power change = ${(queen.x - king.x).toFixed(2)} × ${params.powerMaintainWeight.toFixed(1)} = ${transform.x.toFixed(2)}<br>
+                Gender change = ${(queen.y - king.y).toFixed(2)} × ${Math.abs(params.genderFlipWeight).toFixed(1)} = ${transform.y.toFixed(2)}<br><br>
+                
+                <strong>3. Apply to Prince:</strong><br>
+                Prince [${prince.x.toFixed(2)}, ${prince.y.toFixed(2)}] + [${transform.x.toFixed(2)}, ${transform.y.toFixed(2)}] = [${result.x.toFixed(2)}, ${result.y.toFixed(2)}]<br><br>
+                
+                <strong>4. Find closest word:</strong><br>
+                Closest match: <span class="highlight">${words[closestWord].name}</span> (distance: ${minDistance.toFixed(3)})
+            `;
+            document.getElementById('calculationSteps').innerHTML = steps;
+        }
+    </script>
+</body>
+</html>
