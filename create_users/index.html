@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Create User API Documentation</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2rem;
+      background-color: #f7f9fa;
+      color: #333;
+    }
+    h1, h2 {
+      color: #1a3a5b;
+    }
+    code, pre {
+      background-color: #eef2f5;
+      border: 1px solid #ccc;
+      padding: 1rem;
+      display: block;
+      white-space: pre-wrap;
+      word-break: break-word;
+      border-radius: 5px;
+    }
+    section {
+      margin-bottom: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Create User API</h1>
+
+  <section>
+    <h2>Endpoint</h2>
+    <p><strong>Method:</strong> POST</p>
+    <p><strong>URL:</strong> <code>/v1/users?view={viewoption}</code></p>
+  </section>
+
+  <section>
+    <h2>Query Parameters</h2>
+    <ul>
+      <li><code>view=id</code>: Returns only the user ID</li>
+      <li><code>view=entity</code>: Returns the full user DTO (entity object)</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Description</h2>
+    <p>This endpoint allows clients to create a user by submitting structured personal, contact, and address information. The <code>view</code> query parameter modifies the response shape.</p>
+  </section>
+
+  <section>
+    <h2>Request Body Schema (OpenAPI 3.0 compliant)</h2>
+    <pre>{
+  "type": "object",
+  "properties": {
+    "personalInfo": {
+      "type": "object",
+      "properties": {
+        "firstName": { "type": "string" },
+        "lastName": { "type": "string" },
+        "middleName": { "type": "string" },
+        "displayName": { "type": "string" },
+        "title": { "type": "string" },
+        "suffix": { "type": "string" }
+      },
+      "required": ["firstName", "lastName"]
+    },
+    "contactInfo": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "format": "email",
+          "pattern": "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\\\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\\\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])"
+        },
+        "phoneNumber": { "type": "string" },
+        "mobileNumber": { "type": "string" }
+      },
+      "required": ["email"]
+    },
+    "address": {
+      "type": "object",
+      "properties": {
+        "street": { "type": "string" },
+        "apartment": { "type": "string" },
+        "city": { "type": "string" },
+        "state": { "type": "string" },
+        "postalCode": { "type": "string" },
+        "country": { "type": "string" }
+      },
+      "required": ["street", "city", "state", "postalCode", "country"]
+    }
+  },
+  "required": ["personalInfo", "contactInfo", "address"]
+}</pre>
+  </section>
+
+  <section>
+    <h2>Sample Request</h2>
+    <pre>{
+  "personalInfo": {
+    "firstName": "Testamentix",
+    "lastName": "Breakemius",
+    "middleName": "Maximilian",
+    "displayName": "Test Breakemius",
+    "title": "Dr.",
+    "suffix": "PhD"
+  },
+  "contactInfo": {
+    "email": "testamentix.breakemius@example.com",
+    "phoneNumber": "+1-555-0123",
+    "mobileNumber": "+1-555-0124"
+  },
+  "address": {
+    "street": "123 Innovation Boulevard",
+    "apartment": "Suite 4B",
+    "city": "Tech Valley",
+    "state": "California",
+    "postalCode": "94105",
+    "country": "United States"
+  }
+}</pre>
+  </section>
+
+  <section>
+    <h2>Sample Responses</h2>
+
+    <h3>201 Created (view=id)</h3>
+    <pre>{
+  "id": "abc123"
+}</pre>
+
+    <h3>201 Created (view=entity)</h3>
+    <pre>{
+  "userId": "abc123",
+  "personalInfo": {
+    "firstName": "Testamentix",
+    "lastName": "Breakemius",
+    "middleName": "Maximilian",
+    "displayName": "Test Breakemius",
+    "title": "Dr.",
+    "suffix": "PhD"
+  },
+  "contactInfo": {
+    "email": "testamentix.breakemius@example.com",
+    "phoneNumber": "+1-555-0123",
+    "mobileNumber": "+1-555-0124"
+  },
+  "address": {
+    "street": "123 Innovation Boulevard",
+    "apartment": "Suite 4B",
+    "city": "Tech Valley",
+    "state": "California",
+    "postalCode": "94105",
+    "country": "United States"
+  },
+  "createdAt": "2025-06-25T15:00:00Z"
+}</pre>
+
+  </section>
+
+  <section>
+    <h2>HTTP Status Codes</h2>
+    <ul>
+      <li><strong>201 Created</strong> – User successfully created</li>
+      <li><strong>400 Bad Request</strong> – Missing or invalid input</li>
+      <li><strong>409 Conflict</strong> – Duplicate user or constraint violation</li>
+      <li><strong>500 Internal Server Error</strong> – Unexpected failure</li>
+    </ul>
+
+    <h3>Sample Error (400)</h3>
+    <pre>{
+  "error": "Missing required fields: firstName, email"
+}</pre>
+
+    <h3>Sample Error (409)</h3>
+    <pre>{
+  "error": "User with this email already exists"
+}</pre>
+
+    <h3>Sample Error (500)</h3>
+    <pre>{
+  "error": "An unexpected error occurred. Please try again later."
+}</pre>
+  </section>
+
+</body>
+</html>
