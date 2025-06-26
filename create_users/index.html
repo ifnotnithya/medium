@@ -47,7 +47,7 @@
 
   <section>
     <h2>Description</h2>
-    <p>This endpoint allows clients to create a user by submitting structured personal, contact, and address information. The <code>view</code> query parameter modifies the response shape.</p>
+    <p>This endpoint allows clients to create a user by submitting structured personal, contact, and address information. The <code>?view=</code> query parameter modifies the response shape.</p>
   </section>
 
   <section>
@@ -58,6 +58,7 @@
     <tr>
       <th>JSONPath</th>
       <th>Attribute Type</th>
+      <th>Attribute Constraints</th>
       <th>Sample Value</th>
       <th>Description</th>
     </tr>
@@ -66,90 +67,105 @@
     <tr>
       <td>personalInfo.firstName</td>
       <td>string</td>
+      <td>Required</td>
       <td>Testamentix</td>
       <td>User's first name</td>
     </tr>
     <tr>
       <td>personalInfo.lastName</td>
       <td>string</td>
+      <td>Required</td>
       <td>Breakemius</td>
       <td>User's last name</td>
     </tr>
     <tr>
       <td>personalInfo.middleName</td>
       <td>string</td>
+      <td>Optional</td>
       <td>Maximilian</td>
       <td>User's middle name</td>
     </tr>
     <tr>
       <td>personalInfo.displayName</td>
       <td>string</td>
+      <td>Required</td>
       <td>Test Breakemius</td>
       <td>Full display name used in UI</td>
     </tr>
     <tr>
       <td>personalInfo.title</td>
       <td>string</td>
+      <td>Optional</td>
       <td>Dr.</td>
       <td>Honorific title (e.g., Dr., Mr., Ms.)</td>
     </tr>
     <tr>
       <td>personalInfo.suffix</td>
       <td>string</td>
+      <td>Optional</td>
       <td>PhD</td>
       <td>Name suffix (e.g., Jr., Sr., PhD)</td>
     </tr>
     <tr>
       <td>contactInfo.email</td>
       <td>string</td>
+      <td>Required</td>
       <td>testamentix.breakemius@example.com</td>
       <td>Primary email address. regex : (?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\\\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\\\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])</td>
     </tr>
     <tr>
       <td>contactInfo.phoneNumber</td>
       <td>string</td>
+      <td>Required</td>
       <td>+1-555-0123</td>
       <td>Landline phone number</td>
     </tr>
     <tr>
       <td>contactInfo.mobileNumber</td>
       <td>string</td>
+      <td>Optional</td>
       <td>+1-555-0124</td>
       <td>Mobile phone number</td>
     </tr>
     <tr>
       <td>address.street</td>
       <td>string</td>
+      <td>Required</td>
       <td>123 Innovation Boulevard</td>
       <td>Street address</td>
     </tr>
     <tr>
       <td>address.apartment</td>
       <td>string</td>
+      <td>Optional</td>
       <td>Suite 4B</td>
       <td>Apartment or suite number</td>
     </tr>
     <tr>
       <td>address.city</td>
       <td>string</td>
+      <td>Required</td>
       <td>Tech Valley</td>
       <td>City of residence</td>
     </tr>
     <tr>
       <td>address.state</td>
       <td>string</td>
+      <td>Required</td>
       <td>California</td>
       <td>State or province</td>
     </tr>
     <tr>
       <td>address.postalCode</td>
       <td>string</td>
+      <td>Required</td>
       <td>94105</td>
       <td>ZIP or postal code</td>
     </tr>
     <tr>
       <td>address.country</td>
       <td>string</td>
+      <td>Required</td>
       <td>United States</td>
       <td>Country name</td>
     </tr>
