@@ -25,6 +25,36 @@
     section {
       margin-bottom: 2rem;
     }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+    }
+
+    thead {
+      background-color: #f4f7fa;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: left;
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: #f9fbfc;
+    }
+
+    tbody tr:hover {
+      background-color: #eef6ff;
+    }
+
+    th {
+      background-color: #e9eff5;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -52,127 +82,64 @@
 
   <section>
     <h2>Request Body Schema (OpenAPI 3.0 compliant)</h2>
-    <pre>
-    <table border="1" cellpadding="6" cellspacing="0" style="width: 100%; border-collapse: collapse;">
-      <thead style="background-color: #f4f7fa;">
-        <tr>
-          <th style="width: 20%;">JSONPath</th>
-          <th style="width: 15%;">Attribute Type</th>
-          <th style="width: 15%;">Attribute Constraints</th>
-          <th style="width: 20%;">Sample Value</th>
-          <th style="width: 30%;">Description</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>personalInfo.firstName</td>
-          <td>string</td>
-          <td>Required</td>
-          <td>Testamentix</td>
-          <td>User's first name</td>
-        </tr>
-        <tr>
-          <td>personalInfo.lastName</td>
-          <td>string</td>
-          <td>Required</td>
-          <td>Breakemius</td>
-          <td>User's last name</td>
-        </tr>
-        <tr>
-          <td>personalInfo.middleName</td>
-          <td>string</td>
-          <td>Optional</td>
-          <td>Maximilian</td>
-          <td>User's middle name</td>
-        </tr>
-        <tr>
-          <td>personalInfo.displayName</td>
-          <td>string</td>
-          <td>Required</td>
-          <td>Test Breakemius</td>
-          <td>Full display name used in UI</td>
-        </tr>
-        <tr>
-          <td>personalInfo.title</td>
-          <td>string</td>
-          <td>Optional</td>
-          <td>Dr.</td>
-          <td>Honorific title (e.g., Dr., Mr., Ms.)</td>
-        </tr>
-        <tr>
-          <td>personalInfo.suffix</td>
-          <td>string</td>
-          <td>Optional</td>
-          <td>PhD</td>
-          <td>Name suffix (e.g., Jr., Sr., PhD)</td>
-        </tr>
-        <tr>
-          <td>contactInfo.email</td>
-          <td>string</td>
-          <td>Required</td>
-          <td>testamentix.breakemius@example.com</td>
-          <td>Primary email address. regex : (?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\\\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\\\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])</td>
-        </tr>
-        <tr>
-          <td>contactInfo.phoneNumber</td>
-          <td>string</td>
-          <td>Required</td>
-          <td>+1-555-0123</td>
-          <td>Landline phone number</td>
-        </tr>
-        <tr>
-          <td>contactInfo.mobileNumber</td>
-          <td>string</td>
-          <td>Optional</td>
-          <td>+1-555-0124</td>
-          <td>Mobile phone number</td>
-        </tr>
-        <tr>
-          <td>address.street</td>
-          <td>string</td>
-          <td>Required</td>
-          <td>123 Innovation Boulevard</td>
-          <td>Street address</td>
-        </tr>
-        <tr>
-          <td>address.apartment</td>
-          <td>string</td>
-          <td>Optional</td>
-          <td>Suite 4B</td>
-          <td>Apartment or suite number</td>
-        </tr>
-        <tr>
-          <td>address.city</td>
-          <td>string</td>
-          <td>Required</td>
-          <td>Tech Valley</td>
-          <td>City of residence</td>
-        </tr>
-        <tr>
-          <td>address.state</td>
-          <td>string</td>
-          <td>Required</td>
-          <td>California</td>
-          <td>State or province</td>
-        </tr>
-        <tr>
-          <td>address.postalCode</td>
-          <td>string</td>
-          <td>Required</td>
-          <td>94105</td>
-          <td>ZIP or postal code</td>
-        </tr>
-        <tr>
-          <td>address.country</td>
-          <td>string</td>
-          <td>Required</td>
-          <td>United States</td>
-          <td>Country name</td>
-        </tr>
-      </tbody>
-    </table>
 
-    </pre>
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 20%;">JSONPath</th>
+            <th style="width: 10%;">Attribute Type</th>
+            <th style="width: 35%;">Attribute Constraints</th>
+            <th style="width: 10%;">Sample Value</th>
+            <th style="width: 25%;">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>personalInfo.firstName</td><td>string</td><td>Required, max 50 chars, letters + spaces, hyphen, apostrophe (e.g. O'Connor)</td><td>Testamentix</td><td>User's first name</td></tr>
+          <tr><td>personalInfo.lastName</td><td>string</td><td>Required, max 50 chars, letters + spaces, hyphen, apostrophe</td><td>Breakemius</td><td>User's last name</td></tr>
+          <tr><td>personalInfo.middleName</td><td>string</td><td>Optional, max 50 chars, same rules as firstName</td><td>Maximilian</td><td>User's middle name</td></tr>
+          <tr><td>personalInfo.displayName</td><td>string</td><td>Optional, max 100 chars, freeform (UI-safe text)</td><td>Test Breakemius</td><td>Full display name used in UI</td></tr>
+          <tr><td>personalInfo.title</td><td>string</td><td>Optional, max 10 chars, letters/periods (e.g., Dr., Mr.)</td><td>Dr.</td><td>Honorific title</td></tr>
+          <tr><td>personalInfo.suffix</td><td>string</td><td>Optional, max 10 chars, letters only (e.g., Jr., PhD)</td><td>PhD</td><td>Name suffix</td></tr>
+          <tr><td>contactInfo.email</td><td>string</td><td>Required, max 254 chars, RFC-compliant regex : <code>Primary email address. regex : (?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\\\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\\\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])</code></td><td>testamentix.breakemius@example.com</td><td>Primary email address</td></tr>
+          
+          <tr>
+  <td>contactInfo.phoneNumber</td>
+  <td>string</td>
+  <td>
+    Optional, U.S. number in E.164 format only,<br>
+    max 15 digits, regex: <code>^\+1\d{10}$</code>
+  </td>
+  <td>
+    +14155550123 (E.164)<br>
+    +12125550100<br>
+    +13105550189
+  </td>
+  <td>Landline phone number (U.S.-only)</td>
+</tr>
+<tr>
+  <td>contactInfo.mobileNumber</td>
+  <td>string</td>
+  <td>
+    Required, U.S. number in E.164 format only,<br>
+    max 15 digits, regex: <code>^\+1\d{10}$</code>
+  </td>
+  <td>
+    +14155550124 (E.164)<br>
+    +16505550999<br>
+    +19175550777
+  </td>
+  <td>Mobile phone number (U.S.-only)</td>
+</tr>
+
+          <tr><td>address.street</td><td>string</td><td>Required, max 100 chars, allows letters, numbers, #, ., -</td><td>123 Innovation Boulevard</td><td>Street address</td></tr>
+          <tr><td>address.apartment</td><td>string</td><td>Optional, max 20 chars</td><td>Suite 4B</td><td>Apartment or suite number</td></tr>
+          <tr><td>address.city</td><td>string</td><td>Required, max 50 chars, letters + spaces + hyphen</td><td>Tech Valley</td><td>City of residence</td></tr>
+          <tr><td>address.state</td><td>string</td><td>Required, max 50 chars</td><td>California</td><td>State or province</td></tr>
+          <tr><td>address.postalCode</td><td>string</td><td>Required, max 12 chars, alphanumeric + dash</td><td>94105</td><td>ZIP or postal code</td></tr>
+          <tr><td>address.country</td><td>string</td><td>Required, max 50 chars, letters and spaces</td><td>United States</td><td>Country name</td></tr>
+        </tbody>
+      </table>
+
   </section>
 
   <section>
@@ -236,7 +203,6 @@
   },
   "createdAt": "2025-06-25T15:00:00Z"
 }</pre>
-
   </section>
 
   <section>
